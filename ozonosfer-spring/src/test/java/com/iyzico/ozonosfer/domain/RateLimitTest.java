@@ -1,13 +1,18 @@
 package com.iyzico.ozonosfer.domain;
 
+import com.iyzico.ozonosfer.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = Application.class)
 public class RateLimitTest {
+
+    @Autowired
+    RateLimitedService rateLimitedService;
 
     public RateLimitTest() {
     }
@@ -16,11 +21,10 @@ public class RateLimitTest {
     public void shouldLimit() {
         //given
         SampleRequest request = new SampleRequest();
-        this.rateLimitedMethod(request);
+        rateLimitedService.rateLimitedMethod(request);
     }
 
-    @RateLimit(key = "request.authenticationId", seconds = 60, limit = 1000)
-    public void rateLimitedMethod(SampleRequest request) {
-        System.out.println("rate limited method executed!");
+    @Test
+    public void name() throws Exception {
     }
 }
