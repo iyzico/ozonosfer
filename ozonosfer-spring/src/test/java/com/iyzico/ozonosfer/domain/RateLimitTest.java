@@ -23,8 +23,4 @@ public class RateLimitTest {
         SampleRequest request = new SampleRequest();
         rateLimitedService.rateLimitedMethod(request);
     }
-
-    @Test
-    public void name() throws Exception {
-    }
 }
