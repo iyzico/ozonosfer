@@ -10,11 +10,13 @@ For ozonosfer-spring JDK 1.8 or newer is required.
 # Usage
 
 ```java
-    @RateLimit(key = "request.authenticationId", seconds = 60, limit = 1000)
+    @RateLimit(key = "#request.authenticationId", seconds = 60, limit = 1000)
     public void rateLimitedMethod(SampleRequest request) {
         System.out.println("rate limited method executed!");
     }
 ```
+
+Note: ```key``` expression supports fields inside nested objects ("#request.user.id")
 
 # Options
 
