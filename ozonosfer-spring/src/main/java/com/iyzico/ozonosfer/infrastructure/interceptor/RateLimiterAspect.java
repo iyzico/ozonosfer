@@ -12,6 +12,8 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.IntStream;
+
 @Aspect
 @Component
 public class RateLimiterAspect {
@@ -22,10 +24,9 @@ public class RateLimiterAspect {
         this.rateLimiterService = rateLimiterService;
     }
 
-    @Before("@annotation(com.iyzico.ozonosfer.domain.RateLimit)")
-    public void before(JoinPoint joinPoint) {
+    @Before("@annotation(rateLimitAnnotation)")
+    public void before(JoinPoint joinPoint, RateLimit rateLimitAnnotation) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        RateLimit rateLimitAnnotation = signature.getMethod().getAnnotation(RateLimit.class);
         Object value = getValueByKey(signature.getParameterNames(), joinPoint.getArgs(), rateLimitAnnotation.key());
         rateLimiterService.rateLimit(value, rateLimitAnnotation.limit(), rateLimitAnnotation.seconds());
     }
@@ -34,9 +35,8 @@ public class RateLimiterAspect {
         ExpressionParser parser = new SpelExpressionParser();
         EvaluationContext context = new StandardEvaluationContext();
 
-        for (int i = 0; i < parameterNames.length; i++) {
-            context.setVariable(parameterNames[i], args[i]);
-        }
+        IntStream.range(0, parameterNames.length)
+                .forEach(i -> context.setVariable(parameterNames[i], args[i]));
 
         return parser.parseExpression(key).getValue(context);
     }
