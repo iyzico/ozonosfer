@@ -22,7 +22,7 @@ public @interface RateLimit {
     String key();
 
     /**
-     * Window type of rate limiter. Default is minute.
+     * Window size of rate limiter. Default is MINUTE.
      */
     RateLimitWindowSize windowSize() default RateLimitWindowSize.MINUTE;
 
