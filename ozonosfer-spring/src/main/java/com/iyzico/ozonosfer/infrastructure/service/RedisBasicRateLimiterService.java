@@ -104,10 +104,10 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
     private Tuple3<String, Integer, TimeUnit> retrieveKeyAndTimeout(RateLimitRequest request) {
         LocalTime now = LocalTime.now();
         String finalKey = request.getPrefix() + DELIMITER + request.getKey();
-        if (RateLimitWindowSize.HOUR.equals(request.getWindowType())) {
+        if (RateLimitWindowSize.HOUR.equals(request.getWindowSize())) {
             String key = KEY_PREFIX_HOUR + finalKey + DELIMITER + now.getHour();
             return Tuple.tuple(key, 59, TimeUnit.MINUTES);
-        } else if (RateLimitWindowSize.SECOND.equals(request.getWindowType())) {
+        } else if (RateLimitWindowSize.SECOND.equals(request.getWindowSize())) {
             String key = KEY_PREFIX_SECOND + finalKey + DELIMITER + now.getSecond();
             return Tuple.tuple(key, 999, TimeUnit.MILLISECONDS);
         } else {

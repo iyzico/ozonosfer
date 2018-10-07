@@ -5,7 +5,7 @@ public class RateLimitRequest {
     private String prefix;
     private Object key;
     private long limit;
-    private RateLimitWindowSize windowType;
+    private RateLimitWindowSize windowSize;
 
     public String getPrefix() {
         return prefix;
@@ -31,12 +31,12 @@ public class RateLimitRequest {
         this.limit = limit;
     }
 
-    public RateLimitWindowSize getWindowType() {
-        return windowType;
+    public RateLimitWindowSize getWindowSize() {
+        return windowSize;
     }
 
-    public void setWindowType(RateLimitWindowSize windowType) {
-        this.windowType = windowType;
+    public void setWindowSize(RateLimitWindowSize windowSize) {
+        this.windowSize = windowSize;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class RateLimitRequest {
                 "prefix='" + prefix + '\'' +
                 ", key=" + key +
                 ", limit=" + limit +
-                ", windowSize=" + windowType +
+                ", windowSize=" + windowSize +
                 '}';
     }
 }
