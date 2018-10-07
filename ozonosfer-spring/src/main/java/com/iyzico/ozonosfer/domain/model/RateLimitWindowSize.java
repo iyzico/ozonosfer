@@ -1,6 +1,6 @@
 package com.iyzico.ozonosfer.domain.model;
 
-public enum RateLimitWindowType {
+public enum RateLimitWindowSize {
 
     SECOND, MINUTE, HOUR
 }

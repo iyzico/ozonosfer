@@ -3,7 +3,7 @@ package com.iyzico.ozonosfer.infrastructure.service;
 import com.google.common.collect.Iterables;
 import com.iyzico.ozonosfer.domain.exception.RateLimitedException;
 import com.iyzico.ozonosfer.domain.model.RateLimitRequest;
-import com.iyzico.ozonosfer.domain.model.RateLimitWindowType;
+import com.iyzico.ozonosfer.domain.model.RateLimitWindowSize;
 import com.iyzico.ozonosfer.domain.service.RateLimiterService;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple3;
@@ -25,9 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @ConditionalOnProperty(prefix = "ozonosfer.implementation", name = "redis", matchIfMissing = true)
-public class RedisRateLimiterService implements RateLimiterService {
+public class RedisBasicRateLimiterService implements RateLimiterService {
 
-    private Logger logger = LoggerFactory.getLogger(RedisRateLimiterService.class);
+    private Logger logger = LoggerFactory.getLogger(RedisBasicRateLimiterService.class);
 
     private static final String DELIMITER = ":";
     private static final String KEY_PREFIX_SECOND = "ozon:s:";
@@ -37,7 +37,7 @@ public class RedisRateLimiterService implements RateLimiterService {
 
     private RedisTemplate<String, String> redisTemplate;
 
-    public RedisRateLimiterService(RedisTemplate<String, String> redisTemplate) {
+    public RedisBasicRateLimiterService(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
@@ -104,10 +104,10 @@ public class RedisRateLimiterService implements RateLimiterService {
     private Tuple3<String, Integer, TimeUnit> retrieveKeyAndTimeout(RateLimitRequest request) {
         LocalTime now = LocalTime.now();
         String finalKey = request.getPrefix() + DELIMITER + request.getKey();
-        if (RateLimitWindowType.HOUR.equals(request.getWindowType())) {
+        if (RateLimitWindowSize.HOUR.equals(request.getWindowType())) {
             String key = KEY_PREFIX_HOUR + finalKey + DELIMITER + now.getHour();
             return Tuple.tuple(key, 59, TimeUnit.MINUTES);
-        } else if (RateLimitWindowType.SECOND.equals(request.getWindowType())) {
+        } else if (RateLimitWindowSize.SECOND.equals(request.getWindowType())) {
             String key = KEY_PREFIX_SECOND + finalKey + DELIMITER + now.getSecond();
             return Tuple.tuple(key, 999, TimeUnit.MILLISECONDS);
         } else {

@@ -33,7 +33,7 @@ public class RateLimiterAspect {
             rateLimitRequest.setPrefix(rateLimitAnnotation.prefix());
             rateLimitRequest.setKey(value);
             rateLimitRequest.setLimit(rateLimitAnnotation.limit());
-            rateLimitRequest.setWindowType(rateLimitAnnotation.windowType());
+            rateLimitRequest.setWindowType(rateLimitAnnotation.windowSize());
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }

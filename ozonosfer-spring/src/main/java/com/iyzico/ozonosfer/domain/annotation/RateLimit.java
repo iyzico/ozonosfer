@@ -1,6 +1,6 @@
 package com.iyzico.ozonosfer.domain.annotation;
 
-import com.iyzico.ozonosfer.domain.model.RateLimitWindowType;
+import com.iyzico.ozonosfer.domain.model.RateLimitWindowSize;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,7 +24,7 @@ public @interface RateLimit {
     /**
      * Window type of rate limiter. Default is minute.
      */
-    RateLimitWindowType windowType() default RateLimitWindowType.MINUTE;
+    RateLimitWindowSize windowSize() default RateLimitWindowSize.MINUTE;
 
     /**
      * Rate limit count.

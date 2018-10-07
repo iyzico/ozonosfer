@@ -12,7 +12,7 @@ import java.time.LocalTime;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
-public class RedisRateLimiterIT extends IntegrationTest {
+public class RedisBasicRateLimiterIT extends IntegrationTest {
 
     @Autowired
     RateLimitedService rateLimitedService;
@@ -20,7 +20,7 @@ public class RedisRateLimiterIT extends IntegrationTest {
     @Autowired
     RedisTemplate<String, String> redisTemplate;
 
-    public RedisRateLimiterIT() {
+    public RedisBasicRateLimiterIT() {
     }
 
     @Test
@@ -73,7 +73,7 @@ public class RedisRateLimiterIT extends IntegrationTest {
 
         //then
         Assertions.assertThat(throwable).isNotNull();
-        Assertions.assertThat(throwable).isInstanceOf(RateLimitedException.class).hasMessageContaining("RateLimitRequest{prefix='app:method', key=17, limit=10, windowType=MINUTE}");
+        Assertions.assertThat(throwable).isInstanceOf(RateLimitedException.class).hasMessageContaining("RateLimitRequest{prefix='app:method', key=17, limit=10, windowSize=MINUTE}");
 
         String value = redisTemplate.opsForValue().get("ozon:m:app:method:17:" + now.getMinute());
 
