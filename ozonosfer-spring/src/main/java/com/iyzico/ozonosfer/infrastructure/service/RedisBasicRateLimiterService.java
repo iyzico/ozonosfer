@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -67,11 +68,9 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
                 @Override
                 public <K, V> Long execute(RedisOperations<K, V> operations) {
                     String value = redisTemplate.opsForValue().get(key);
-                    if (value == null) {
-                        return 1L;
-                    } else {
-                        return Long.parseLong(value);
-                    }
+                    return Optional.ofNullable(value)
+                            .map(Long::parseLong)
+                            .orElse(1L);
                 }
             });
         } catch (Exception e) {
