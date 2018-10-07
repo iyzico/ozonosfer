@@ -19,6 +19,10 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Basic redis rate limiter service implemented via https://redislabs.com/redis-best-practices/basic-rate-limiting/
+ */
+
 @Service
 @ConditionalOnProperty(prefix = "ozonosfer.implementation", name = "redis", matchIfMissing = true)
 public class RedisRateLimiterService implements RateLimiterService {
