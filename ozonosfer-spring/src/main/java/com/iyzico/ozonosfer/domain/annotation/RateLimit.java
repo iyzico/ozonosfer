@@ -1,4 +1,6 @@
-package com.iyzico.ozonosfer.domain;
+package com.iyzico.ozonosfer.domain.annotation;
+
+import com.iyzico.ozonosfer.domain.model.RateLimitWindowType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,14 +12,19 @@ import java.lang.annotation.Target;
 public @interface RateLimit {
 
     /**
+     * Key prefix for rate limiting. Use application name as convention.
+     */
+    String prefix();
+
+    /**
      * Key for rate limiting. If the rate limiting is request based per user, the key can be authenticated user id.
      */
     String key();
 
     /**
-     * Size of a time window in seconds. Default value is 60 seconds.
+     * Window type of rate limiter. Default is minute.
      */
-    long seconds() default 60L;
+    RateLimitWindowType windowType() default RateLimitWindowType.MINUTE;
 
     /**
      * Rate limit count.
