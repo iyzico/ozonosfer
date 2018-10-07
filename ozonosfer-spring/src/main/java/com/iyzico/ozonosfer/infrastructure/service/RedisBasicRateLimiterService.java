@@ -44,7 +44,7 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
 
     @Override
     public void rateLimit(RateLimitRequest request) {
-        Long count = retrieve(request);
+        Long count = retrieveCount(request);
         if (rateLimitExceeded(request.getLimit(), count)) {
             throw new RateLimitedException(request);
         } else {
@@ -56,7 +56,7 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
         return count != null && count >= limit;
     }
 
-    private Long retrieve(RateLimitRequest request) {
+    private Long retrieveCount(RateLimitRequest request) {
         String key = retrieveKeyAndTimeout(request).v1;
         return redisTemplate.execute(new SessionCallback<Long>() {
             @Override
