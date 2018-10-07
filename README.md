@@ -20,6 +20,7 @@ Note: ```key``` expression supports fields inside nested objects ("#request.user
 
 # Options
 
+* ```prefix``` - the prefix of identifier to limit against (retrieved from method parameter)
 * ```key``` - the identifier to limit against (retrieved from method parameter)
-* ```limit``` - max requests within seconds
-* ```seconds``` - duration of limit in seconds
+* ```windowType``` - the size of a window. Can be SECOND, MINUTE or HOUR.
+* ```seconds``` - the duration of limit in given window size
