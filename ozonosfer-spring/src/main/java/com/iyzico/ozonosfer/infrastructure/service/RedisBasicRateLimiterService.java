@@ -45,59 +45,45 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
     @Override
     public void rateLimit(RateLimitRequest request) {
         Long count = retrieve(request);
-        if (rateLimitExceeded(request, count)) {
+        if (rateLimitExceeded(request.getLimit(), count)) {
             throw new RateLimitedException(request);
         } else {
             increment(request);
         }
     }
 
-    private boolean rateLimitExceeded(RateLimitRequest request, Long count) {
-        try {
-            return count != null && count >= request.getLimit();
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-            return false;
-        }
+    private boolean rateLimitExceeded(Long limit, Long count) {
+        return count != null && count >= limit;
     }
 
     private Long retrieve(RateLimitRequest request) {
-        try {
-            String key = retrieveKeyAndTimeout(request).v1;
-            return redisTemplate.execute(new SessionCallback<Long>() {
-                @Override
-                public <K, V> Long execute(RedisOperations<K, V> operations) {
-                    String value = redisTemplate.opsForValue().get(key);
-                    return Optional.ofNullable(value)
-                            .map(Long::parseLong)
-                            .orElse(1L);
-                }
-            });
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-        }
-        return null;
+        String key = retrieveKeyAndTimeout(request).v1;
+        return redisTemplate.execute(new SessionCallback<Long>() {
+            @Override
+            public <K, V> Long execute(RedisOperations<K, V> operations) {
+                String value = redisTemplate.opsForValue().get(key);
+                return Optional.ofNullable(value)
+                        .map(Long::parseLong)
+                        .orElse(1L);
+            }
+        });
     }
 
     private Boolean increment(RateLimitRequest request) {
-        try {
-            String key = retrieveKeyAndTimeout(request).v1;
-            Integer timeout = retrieveKeyAndTimeout(request).v2;
-            TimeUnit timeUnit = retrieveKeyAndTimeout(request).v3;
-            return redisTemplate.execute(new SessionCallback<Boolean>() {
-                @Override
-                public <K, V> Boolean execute(RedisOperations<K, V> operations) {
-                    redisTemplate.multi();
-                    redisTemplate.opsForValue().increment(key, DELTA);
-                    redisTemplate.expire(key, timeout, timeUnit);
-                    List<Object> objectList = operations.exec();
-                    return (Boolean) Iterables.getLast(objectList);
-                }
-            });
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-            return false;
-        }
+        String key = retrieveKeyAndTimeout(request).v1;
+        Integer timeout = retrieveKeyAndTimeout(request).v2;
+        TimeUnit timeUnit = retrieveKeyAndTimeout(request).v3;
+        return redisTemplate.execute(new SessionCallback<Boolean>() {
+            @Override
+            public <K, V> Boolean execute(RedisOperations<K, V> operations) {
+                redisTemplate.multi();
+                redisTemplate.opsForValue().increment(key, DELTA);
+                redisTemplate.expire(key, timeout, timeUnit);
+                List<Object> objectList = operations.exec();
+                return (Boolean) Iterables.getLast(objectList);
+            }
+        });
+
     }
 
     private Tuple3<String, Integer, TimeUnit> retrieveKeyAndTimeout(RateLimitRequest request) {
