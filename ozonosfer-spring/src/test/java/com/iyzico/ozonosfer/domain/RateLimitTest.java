@@ -21,6 +21,8 @@ public class RateLimitTest {
     public void shouldLimit() {
         //given
         SampleRequest request = new SampleRequest();
+        request.setAuthenticationId("15");
+
         rateLimitedService.rateLimitedMethod(request);
     }
 }
