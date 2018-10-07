@@ -1,6 +1,7 @@
 package com.iyzico.ozonosfer.infrastructure.interceptor;
 
 import com.iyzico.ozonosfer.domain.annotation.RateLimit;
+import com.iyzico.ozonosfer.domain.exception.RateLimitedException;
 import com.iyzico.ozonosfer.domain.model.RateLimitRequest;
 import com.iyzico.ozonosfer.domain.service.RateLimiterService;
 import com.iyzico.ozonosfer.infrastructure.service.KeyEvaluator;
@@ -34,9 +35,17 @@ public class RateLimiterAspect {
             rateLimitRequest.setKey(value);
             rateLimitRequest.setLimit(rateLimitAnnotation.limit());
             rateLimitRequest.setWindowType(rateLimitAnnotation.windowSize());
+            rateLimiterService.rateLimit(rateLimitRequest);
         } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    private void handleException(Exception e) {
+        if (e instanceof RateLimitedException) {
+            throw (RateLimitedException) e;
+        } else {
             logger.warn(e.getMessage(), e);
         }
-        rateLimiterService.rateLimit(rateLimitRequest);
     }
 }
