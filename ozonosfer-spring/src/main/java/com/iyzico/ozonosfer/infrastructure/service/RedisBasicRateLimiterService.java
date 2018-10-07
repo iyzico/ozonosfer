@@ -7,8 +7,6 @@ import com.iyzico.ozonosfer.domain.model.RateLimitWindowSize;
 import com.iyzico.ozonosfer.domain.service.RateLimiterService;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple3;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,12 +21,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Basic redis rate limiter service implemented via https://redislabs.com/redis-best-practices/basic-rate-limiting/
  */
-
 @Service
 @ConditionalOnProperty(prefix = "ozonosfer.implementation", name = "redis", matchIfMissing = true)
 public class RedisBasicRateLimiterService implements RateLimiterService {
-
-    private Logger logger = LoggerFactory.getLogger(RedisBasicRateLimiterService.class);
 
     private static final String DELIMITER = ":";
     private static final String KEY_PREFIX_SECOND = "ozon:s:";
@@ -48,12 +43,12 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
         if (rateLimitExceeded(request.getLimit(), count)) {
             throw new RateLimitedException(request);
         } else {
-            increment(request);
+            incrementCount(request);
         }
     }
 
     private boolean rateLimitExceeded(Long limit, Long count) {
-        return count != null && count >= limit;
+        return count >= limit;
     }
 
     private Long retrieveCount(RateLimitRequest request) {
@@ -69,7 +64,7 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
         });
     }
 
-    private Boolean increment(RateLimitRequest request) {
+    private Boolean incrementCount(RateLimitRequest request) {
         String key = retrieveKeyAndTimeout(request).v1;
         Integer timeout = retrieveKeyAndTimeout(request).v2;
         TimeUnit timeUnit = retrieveKeyAndTimeout(request).v3;
