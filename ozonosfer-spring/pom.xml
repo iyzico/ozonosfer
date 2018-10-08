@@ -18,8 +18,11 @@
 
     <properties>
         <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
-        <spring.version>4.3.2.RELEASE</spring.version>
+        <spring.version>4.3.8.RELEASE</spring.version>
         <aspectjweaver.version>1.9.1</aspectjweaver.version>
+        <embedded-redis.version>0.6</embedded-redis.version>
+        <guava.version>19.0</guava.version>
+        <jool.version>0.9.12</jool.version>
     </properties>
 
     <dependencyManagement>
@@ -54,6 +57,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
@@ -74,8 +81,29 @@
             <version>${aspectjweaver.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool</artifactId>
+            <version>${jool.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.orange.redis-embedded</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>${embedded-redis.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
