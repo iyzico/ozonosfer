@@ -5,8 +5,11 @@ import com.iyzico.ozonosfer.domain.exception.RateLimitedException;
 import com.iyzico.ozonosfer.domain.model.RateLimitRequest;
 import com.iyzico.ozonosfer.domain.model.RateLimitWindowSize;
 import com.iyzico.ozonosfer.domain.service.RateLimiterService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple3;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,6 +28,8 @@ import java.util.concurrent.TimeUnit;
 @ConditionalOnProperty(prefix = "ozonosfer.implementation", name = "redis", matchIfMissing = true)
 public class RedisBasicRateLimiterService implements RateLimiterService {
 
+    private static final Logger logger = LoggerFactory.getLogger(RedisBasicRateLimiterService.class);
+
     private static final String DELIMITER = ":";
     private static final String KEY_PREFIX_SECOND = "ozon:s:";
     private static final String KEY_PREFIX_MINUTE = "ozon:m:";
@@ -38,6 +43,8 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
     }
 
     @Override
+    //TODO Hystrix properties will be specified.
+    @HystrixCommand(fallbackMethod = "rateLimitFallback")
     public void rateLimit(RateLimitRequest request) {
         Long count = retrieveCount(request);
         if (rateLimitExceeded(request.getLimit(), count)) {
@@ -45,6 +52,10 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
         } else {
             incrementCount(request);
         }
+    }
+
+    public void rateLimitFallback(RateLimitRequest rateLimitRequest) {
+        logger.warn("Something is wrong with Redis. Fallback method executed!");
     }
 
     private boolean rateLimitExceeded(Long limit, Long count) {

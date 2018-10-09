@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RateLimiterAspect {
 
-    private Logger logger = LoggerFactory.getLogger(RateLimiterAspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(RateLimiterAspect.class);
 
     private final RateLimiterService rateLimiterService;
 
