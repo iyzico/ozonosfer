@@ -19,6 +19,7 @@
     <properties>
         <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
         <spring.version>4.3.8.RELEASE</spring.version>
+        <spring-cloud-starter-hystrix.version>1.2.3.RELEASE</spring-cloud-starter-hystrix.version>
         <aspectjweaver.version>1.9.1</aspectjweaver.version>
         <embedded-redis.version>0.6</embedded-redis.version>
         <guava.version>19.0</guava.version>
@@ -74,6 +75,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-hystrix</artifactId>
+            <version>${spring-cloud-starter-hystrix.version}</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
