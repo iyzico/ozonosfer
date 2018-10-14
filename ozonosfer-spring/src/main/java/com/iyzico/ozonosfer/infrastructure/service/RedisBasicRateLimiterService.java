@@ -6,6 +6,7 @@ import com.iyzico.ozonosfer.domain.model.RateLimitRequest;
 import com.iyzico.ozonosfer.domain.model.RateLimitWindowSize;
 import com.iyzico.ozonosfer.domain.service.RateLimiterService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple3;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisBasicRateLimiterService.class);
 
+    public static final String HYSTRIX_COMMAND_KEY = "ozonosfer-hystrix";
     private static final String DELIMITER = ":";
     private static final String KEY_PREFIX_SECOND = "ozon:s:";
     private static final String KEY_PREFIX_MINUTE = "ozon:m:";
@@ -43,8 +45,23 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
     }
 
     @Override
-    //TODO Hystrix properties will be specified.
-    @HystrixCommand(fallbackMethod = "rateLimitFallback")
+    @HystrixCommand(
+            commandKey = HYSTRIX_COMMAND_KEY,
+            ignoreExceptions = RateLimitedException.class,
+            fallbackMethod = "rateLimitFallback",
+            commandProperties = {@HystrixProperty(
+                    name = "execution.isolation.thread.timeoutInMilliseconds",
+                    value = "1000"
+            ), @HystrixProperty(
+                    name = "circuitBreaker.requestVolumeThreshold",
+                    value = "5"
+            ), @HystrixProperty(
+                    name = "metrics.rollingStats.timeInMilliseconds",
+                    value = "5000"
+            )},
+            threadPoolProperties = {@HystrixProperty(
+                    name = "coreSize",
+                    value = "20")})
     public void rateLimit(RateLimitRequest request) {
         Long count = retrieveCount(request);
         if (rateLimitExceeded(request.getLimit(), count)) {
@@ -54,8 +71,8 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
         }
     }
 
-    public void rateLimitFallback(RateLimitRequest rateLimitRequest) {
-        logger.warn("Something is wrong with Redis. Fallback method executed!");
+    public void rateLimitFallback(RateLimitRequest rateLimitRequest, Throwable e) {
+        logger.warn("Something is wrong with Rate Limiter. Fallback method executed!", e);
     }
 
     private boolean rateLimitExceeded(Long limit, Long count) {

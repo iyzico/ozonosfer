@@ -4,6 +4,7 @@ spring:
   redis:
     host: localhost
     port: 6381
+    timeout: 1000
 ozonosfer:
   implementation: redis
   seconds: 60
