@@ -1,24 +1,40 @@
 package com.iyzico.ozonosfer.domain;
 
+import com.iyzico.ozonosfer.IntegrationTest;
 import com.iyzico.ozonosfer.domain.exception.RateLimitedException;
+import com.netflix.hystrix.Hystrix;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class RedisBasicRateLimiterIT extends IntegrationTest {
 
     @Autowired
-    RateLimitedService rateLimitedService;
+    MyLimitedService myLimitedService;
 
     @Autowired
     RedisTemplate<String, String> redisTemplate;
+
+    @Before
+    public void setup() throws IOException, URISyntaxException {
+        resetHystrix();
+    }
+
+    private void resetHystrix() {
+        Hystrix.reset();
+    }
 
     public RedisBasicRateLimiterIT() {
     }
@@ -31,12 +47,13 @@ public class RedisBasicRateLimiterIT extends IntegrationTest {
         LocalTime now = LocalTime.now();
 
         //when
-        rateLimitedService.rateLimitedMethod(request);
+        Integer result = myLimitedService.rateLimitedMethod(request);
 
         //then
         String value = redisTemplate.opsForValue().get("ozon:m:app:method:15:" + now.getMinute());
 
         assertThat(value).isEqualTo("1");
+        assertThat(result).isEqualTo(1);
     }
 
     @Test
@@ -48,7 +65,7 @@ public class RedisBasicRateLimiterIT extends IntegrationTest {
 
         //when
         for (int i = 0; i < 5; i++) {
-            rateLimitedService.rateLimitedMethod(request);
+            myLimitedService.rateLimitedMethod(request);
         }
 
         //then
@@ -66,10 +83,10 @@ public class RedisBasicRateLimiterIT extends IntegrationTest {
 
         //when
         for (int i = 0; i < 10; i++) {
-            rateLimitedService.rateLimitedMethod(request);
+            myLimitedService.rateLimitedMethod(request);
         }
         //when
-        Throwable throwable = catchThrowable(() -> rateLimitedService.rateLimitedMethod(request));
+        Throwable throwable = catchThrowable(() -> myLimitedService.rateLimitedMethod(request));
 
         //then
         Assertions.assertThat(throwable).isNotNull();
@@ -81,7 +98,7 @@ public class RedisBasicRateLimiterIT extends IntegrationTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws InterruptedException {
         redisTemplate.delete(redisTemplate.keys("*"));
     }
 }

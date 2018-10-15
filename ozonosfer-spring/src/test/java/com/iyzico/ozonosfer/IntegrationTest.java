@@ -1,6 +1,5 @@
-package com.iyzico.ozonosfer.domain;
+package com.iyzico.ozonosfer;
 
-import com.iyzico.ozonosfer.Application;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;

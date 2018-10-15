@@ -1,5 +1,7 @@
 # ozonosfer
 
+[![Build Status](https://travis-ci.org/iyzico/ozonosfer.svg?branch=master)](https://travis-ci.org/iyzico/ozonosfer)
+
 Intelligent scalable rate limiter
 
 # Requirements

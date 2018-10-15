@@ -6,10 +6,11 @@ import org.springframework.stereotype.Service;
 import static com.iyzico.ozonosfer.domain.model.RateLimitWindowSize.MINUTE;
 
 @Service
-public class RateLimitedService {
+public class MyLimitedService {
 
     @RateLimit(prefix = "app:method", key = "#request.authenticationId", windowSize = MINUTE, limit = 10)
-    public void rateLimitedMethod(SampleRequest request) {
+    public Integer rateLimitedMethod(SampleRequest request) {
         System.out.println("rate limited method executed!");
+        return 1;
     }
 }
