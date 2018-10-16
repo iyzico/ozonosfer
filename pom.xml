@@ -33,6 +33,10 @@
         </developer>
     </developers>
 
+    <modules>
+        <module>ozonosfer-spring</module>
+    </modules>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java-compileSource.version>1.8</java-compileSource.version>

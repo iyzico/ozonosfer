@@ -19,7 +19,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class RedisBasicRateLimiterIT extends IntegrationTest {
+public class RedisBasicRateLimiterTest extends IntegrationTest {
 
     @Autowired
     MyLimitedService myLimitedService;
@@ -36,7 +36,7 @@ public class RedisBasicRateLimiterIT extends IntegrationTest {
         Hystrix.reset();
     }
 
-    public RedisBasicRateLimiterIT() {
+    public RedisBasicRateLimiterTest() {
     }
 
     @Test

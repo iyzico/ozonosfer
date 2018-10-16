@@ -18,11 +18,11 @@ For ozonosfer-spring JDK 1.8 or newer is required.
     }
 ```
 
-Note: ```key``` expression supports fields inside nested objects ("#request.user.id")
-
 # Options
 
 * ```prefix``` - the prefix of identifier to limit against (retrieved from method parameter)
 * ```key``` - the identifier to limit against (retrieved from method parameter)
 * ```windowSize``` - the size of a window. Can be SECOND, MINUTE or HOUR.
-* ```seconds``` - the duration of limit in given window size
+* ```limit``` - maximum number of requests in the given window size.
+
+Note: ```key``` expression supports fields inside nested objects ("#request.user.id")

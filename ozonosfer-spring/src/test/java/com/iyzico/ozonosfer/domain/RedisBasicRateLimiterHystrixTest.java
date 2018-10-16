@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class RedisBasicRateLimiterHystrixIT extends IntegrationTest {
+public class RedisBasicRateLimiterHystrixTest extends IntegrationTest {
 
     @Autowired
     MyLimitedService myLimitedService;
