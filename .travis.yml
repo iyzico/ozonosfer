@@ -1,4 +1,32 @@
 language: java
+
 jdk:
-  - oraclejdk8
-  - openjdk8
+- oraclejdk8
+- openjdk8
+
+sudo: required
+
+services:
+- docker
+
+env:
+- DOCKER_COMPOSE_VERSION=1.22.0
+
+before_install:
+- sudo rm /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin
+
+install:
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+- mvn test  -pl ozonosfer-spring
+
+before_script: cd ozonosfer-test
+
+script:
+- ls
+- docker-compose build
+- docker-compose up -d
+- docker ps
+- mvn test -B
