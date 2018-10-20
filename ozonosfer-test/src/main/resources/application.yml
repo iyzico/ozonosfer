@@ -3,4 +3,4 @@ spring:
   redis:
     host: localhost
     port: 6379
-    timeout: 4000
+    timeout: 1000

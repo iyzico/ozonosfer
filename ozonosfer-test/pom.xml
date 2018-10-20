@@ -13,18 +13,18 @@
 
     <version>1-SNAPSHOT</version>
     <name>ozonosfer-test</name>
-    <description>Intelligent Rate Limiting Framework for Spring Applications</description>
+    <description>Functional test automation of ozonosfer project</description>
 
     <dependencies>
         <dependency>
             <groupId>com.iyzico</groupId>
             <artifactId>ozonosfer-spring</artifactId>
-            <version>1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>1.5.3.RELEASE</version>
+            <version>${spring-boot-starter-test.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

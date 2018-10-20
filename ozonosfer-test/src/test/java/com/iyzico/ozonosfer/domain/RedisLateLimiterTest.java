@@ -87,7 +87,7 @@ public class RedisLateLimiterTest {
                 HttpMethod.POST, entity, String.class);
 
         //then
-        String value = jedis.get("ozon:m:app:getMessage:16:" + now.getMinute());
+        String value = jedis.get("ozon:m:limitedService:getMessage:16:" + now.getMinute());
         assertThat(value).isEqualTo("1");
         JSONAssert.assertEquals(expected, response.getBody(), false);
     }
@@ -115,7 +115,7 @@ public class RedisLateLimiterTest {
         }
 
         //then
-        String value = jedis.get("ozon:m:app:getMessage:17:" + now.getMinute());
+        String value = jedis.get("ozon:m:limitedService:getMessage:17:" + now.getMinute());
 
         assertThat(value).isEqualTo("5");
         JSONAssert.assertEquals(expected, response.getBody(), false);

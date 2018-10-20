@@ -1,7 +1,8 @@
 package com.iyzico.ozonosfer.controller;
 
-import com.iyzico.ozonosfer.domain.request.SampleRequest;
+import com.iyzico.ozonosfer.domain.exception.RateLimitedException;
 import com.iyzico.ozonosfer.domain.model.Message;
+import com.iyzico.ozonosfer.domain.request.SampleRequest;
 import com.iyzico.ozonosfer.domain.service.LimitedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +20,12 @@ public class LimitedServiceController {
         try {
             Message responseMessage = limitedService.getMessage(sampleRequest);
             return responseMessage;
-        }
-        catch (Exception e){
-            return new Message("Rate limit exceeded");
+        } catch (Exception e) {
+            if (e instanceof RateLimitedException) {
+                return new Message("Rate limit exceeded");
+            } else {
+                throw e;
+            }
         }
 
     }

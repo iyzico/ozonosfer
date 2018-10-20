@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LimitedService {
 
-    @RateLimit(prefix = "app:getMessage", key = "#request.authenticationId", windowSize = RateLimitWindowSize.MINUTE, limit = 10)
+    @RateLimit(prefix = "limitedService:getMessage", key = "#request.authenticationId", windowSize = RateLimitWindowSize.MINUTE, limit = 10)
     public Message getMessage (SampleRequest request) throws RateLimitedException {
         return new Message(request.getMessage());
     }
