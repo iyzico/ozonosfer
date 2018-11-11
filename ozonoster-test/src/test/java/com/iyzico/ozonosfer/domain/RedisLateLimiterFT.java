@@ -28,7 +28,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RedisLateLimiterTest {
+public class RedisLateLimiterFT {
 
     @LocalServerPort
     private int port;

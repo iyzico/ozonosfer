@@ -9,5 +9,7 @@ ozonosfer:
   implementation: redis
   seconds: 60
   limit: 1000
-redis:
-  sentinel: false
+  redis:
+    sentinel: false
+    master: ozonosfer-master
+    nodes: ozonosfer-1:26379

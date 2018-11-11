@@ -35,7 +35,7 @@
 
     <modules>
         <module>ozonosfer-spring</module>
-        <module>ozonosfer-test</module>
+        <module>ozonoster-test</module>
     </modules>
 
     <properties>
