@@ -10,6 +10,12 @@
     <name>ozonosfer-test</name>
     <description>Functional Test Automation of ozonosfer Rate Limiter</description>
 
+    <properties>
+        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+        <surefire.forkCount>1</surefire.forkCount>
+        <surefire.reuseForks>true</surefire.reuseForks>
+    </properties>
+
     <parent>
         <groupId>com.iyzico</groupId>
         <artifactId>ozonosfer</artifactId>
@@ -35,6 +41,31 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>unit-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/*Test.*</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*IT.*</exclude>
+                                <exclude>**/*FT.*</exclude>
+                            </excludes>
+                            <reuseForks>${surefire.reuseForks}</reuseForks>
+                            <forkCount>${surefire.forkCount}</forkCount>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
