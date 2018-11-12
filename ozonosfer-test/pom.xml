@@ -14,6 +14,7 @@
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <surefire.forkCount>1</surefire.forkCount>
         <surefire.reuseForks>true</surefire.reuseForks>
+        <maven-failsafe-plugin.version>2.20</maven-failsafe-plugin.version>
     </properties>
 
     <parent>
@@ -69,4 +70,52 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>functional-test</id>
+            <activation>
+                <property>
+                    <name>ft</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven-failsafe-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>functional-tests</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>**/*FT.*</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>**/*Test.*</exclude>
+                                        <exclude>**/*IT.*</exclude>
+                                    </excludes>
+                                    <reuseForks>${surefire.reuseForks}</reuseForks>
+                                    <forkCount>${surefire.forkCount}</forkCount>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
