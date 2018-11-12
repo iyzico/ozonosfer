@@ -2,18 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ozonosfer-test</artifactId>
+    <version>1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>ozonosfer-test</name>
+    <description>Functional Test Automation of ozonosfer Rate Limiter</description>
+
+    <properties>
+        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+        <surefire.forkCount>1</surefire.forkCount>
+        <surefire.reuseForks>true</surefire.reuseForks>
+        <maven-failsafe-plugin.version>2.20</maven-failsafe-plugin.version>
+    </properties>
+
     <parent>
-        <artifactId>ozonosfer</artifactId>
         <groupId>com.iyzico</groupId>
+        <artifactId>ozonosfer</artifactId>
         <version>1-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>ozonosfer-test</artifactId>
-
-    <version>1-SNAPSHOT</version>
-    <name>ozonosfer-test</name>
-    <description>Functional test automation of ozonosfer project</description>
 
     <dependencies>
         <dependency>
@@ -29,17 +37,85 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
-
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>unit-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/*Test.*</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*IT.*</exclude>
+                                <exclude>**/*FT.*</exclude>
+                            </excludes>
+                            <reuseForks>${surefire.reuseForks}</reuseForks>
+                            <forkCount>${surefire.forkCount}</forkCount>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>functional-test</id>
+            <activation>
+                <property>
+                    <name>ft</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven-failsafe-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>functional-tests</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>**/*FT.*</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>**/*Test.*</exclude>
+                                        <exclude>**/*IT.*</exclude>
+                                    </excludes>
+                                    <reuseForks>${surefire.reuseForks}</reuseForks>
+                                    <forkCount>${surefire.forkCount}</forkCount>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

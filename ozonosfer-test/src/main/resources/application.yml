@@ -4,3 +4,5 @@ spring:
     host: localhost
     port: 6379
     timeout: 1000
+redis:
+  sentinel: false
