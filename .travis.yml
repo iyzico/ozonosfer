@@ -19,14 +19,12 @@ before_install:
 - sudo mv docker-compose /usr/local/bin
 
 install:
-- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-- mvn test -Dft
+- mvn clean install -Dit
 
 before_script: cd ozonosfer-test
 
 script:
-- ls
 - docker-compose build
 - docker-compose up -d
 - docker ps
-- mvn test -B
+- mvn clean install -Dft

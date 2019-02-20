@@ -4,6 +4,8 @@ import com.iyzico.ozonosfer.IntegrationTest;
 import com.iyzico.ozonosfer.config.EmbeddedRedis;
 import com.iyzico.ozonosfer.domain.model.RateLimitRequest;
 import com.iyzico.ozonosfer.domain.model.RateLimitWindowSize;
+import com.iyzico.ozonosfer.domain.request.SampleRequest;
+import com.iyzico.ozonosfer.domain.service.LimitedService;
 import com.iyzico.ozonosfer.domain.service.RateLimiterService;
 import com.iyzico.ozonosfer.infrastructure.service.RedisBasicRateLimiterService;
 import com.netflix.config.ConfigurationManager;
@@ -24,7 +26,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 public class RedisBasicRateLimiterHystrixTest extends IntegrationTest {
 
     @Autowired
-    MyLimitedService myLimitedService;
+    LimitedService myLimitedService;
 
     @Autowired
     RateLimiterService rateLimiterService;
