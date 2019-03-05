@@ -31,7 +31,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RedisLateLimiterFT {
 
-    private static final String LIMITED_OBJECTS_KEY = "ozonosfer-limited-objects";
+    private static final String OZONOSFER_WHITE_LIST = "ozonosfer-white-list";
 
     @LocalServerPort
     private int port;
@@ -55,7 +55,7 @@ public class RedisLateLimiterFT {
         HttpHeaders headers = new HttpHeaders();
 
         SampleRequest request = new SampleRequest();
-        jedis.sadd(LIMITED_OBJECTS_KEY, "15");
+        jedis.sadd(OZONOSFER_WHITE_LIST, "15");
         request.setAuthenticationId("15");
         request.setMessage("Hello ozonosfer");
 
@@ -78,7 +78,7 @@ public class RedisLateLimiterFT {
     public void should_return_message_and_assert_number_of_calls_is_one_when_first_call_of_rate_limiter() throws JSONException {
         //given
         SampleRequest request = new SampleRequest();
-        jedis.sadd(LIMITED_OBJECTS_KEY, "16");
+        jedis.sadd(OZONOSFER_WHITE_LIST, "16");
         request.setAuthenticationId("16");
         request.setMessage("ozonosfer");
         LocalTime now = LocalTime.now();
@@ -101,7 +101,7 @@ public class RedisLateLimiterFT {
     @Test
     public void should_return_message_and_assert_number_of_calls_is_five_when_fifth_call_of_rate_limiter() throws JSONException, IOException, InterruptedException {
         //given
-        jedis.sadd(LIMITED_OBJECTS_KEY, "17");
+        jedis.sadd(OZONOSFER_WHITE_LIST, "17");
         SampleRequest request = new SampleRequest();
         request.setAuthenticationId("17");
         request.setMessage("ozonosfer");
@@ -131,7 +131,7 @@ public class RedisLateLimiterFT {
     @Test
     public void should_return_message_between_1000ms_and_1050ms_for_first_4_attempt_when_redis_has_2000ms_latency() throws JSONException, IOException, InterruptedException {
         //given
-        jedis.sadd(LIMITED_OBJECTS_KEY, "18");
+        jedis.sadd(OZONOSFER_WHITE_LIST, "18");
         increaseRedisLatency(2000);
 
         SampleRequest request = new SampleRequest();
@@ -164,7 +164,7 @@ public class RedisLateLimiterFT {
     @Test
     public void should_return_message_under_50ms_after_fifth_attempt_when_redis_has_2000ms_latency() throws JSONException, IOException, InterruptedException {
         //given
-        jedis.sadd(LIMITED_OBJECTS_KEY, "19");
+        jedis.sadd(OZONOSFER_WHITE_LIST, "19");
         increaseRedisLatency(2000);
 
         SampleRequest request = new SampleRequest();
