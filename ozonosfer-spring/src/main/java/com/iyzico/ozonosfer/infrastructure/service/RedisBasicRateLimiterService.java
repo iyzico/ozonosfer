@@ -32,7 +32,6 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
     private static final Logger logger = LoggerFactory.getLogger(RedisBasicRateLimiterService.class);
 
     public static final String HYSTRIX_COMMAND_KEY = "ozonosfer-hystrix";
-    private static final String LIMITED_OBJECTS_KEY = "ozonosfer-limited-objects";
     private static final String DELIMITER = ":";
     private static final String KEY_PREFIX_SECOND = "ozon:s:";
     private static final String KEY_PREFIX_MINUTE = "ozon:m:";
@@ -40,9 +39,12 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
     private static final double DELTA = 1.0;
 
     private RedisTemplate<String, String> redisTemplate;
+    private RedisWhiteListService redisWhiteListService;
 
-    public RedisBasicRateLimiterService(RedisTemplate<String, String> redisTemplate) {
+    public RedisBasicRateLimiterService(RedisTemplate<String, String> redisTemplate,
+                                        RedisWhiteListService redisWhiteListService) {
         this.redisTemplate = redisTemplate;
+        this.redisWhiteListService = redisWhiteListService;
     }
 
     @Override
@@ -64,7 +66,7 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
                     name = "coreSize",
                     value = "20")})
     public void rateLimit(RateLimitRequest request) {
-        if (isKeyLimited(request.getKey())) {
+        if (redisWhiteListService.isNotLimited(String.valueOf(request.getKey()))) {
             Long count = retrieveCount(request);
             if (rateLimitExceeded(request.getLimit(), count)) {
                 logger.warn("The rate limit has been exceeded for key: " + request.getKey());
@@ -75,9 +77,6 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
         }
     }
 
-    private boolean isKeyLimited(Object key) {
-        return redisTemplate.opsForSet().isMember(LIMITED_OBJECTS_KEY,String.valueOf(key));
-    }
 
     public void rateLimitFallback(RateLimitRequest rateLimitRequest, Throwable e) {
         logger.warn("Something is wrong with Rate Limiter. Fallback method executed!", e);
@@ -92,7 +91,7 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
         return redisTemplate.execute(new SessionCallback<Long>() {
             @Override
             public <K, V> Long execute(RedisOperations<K, V> operations) {
-                String value =  redisTemplate.opsForValue().get(key);
+                String value = redisTemplate.opsForValue().get(key);
                 return Optional.ofNullable(value)
                         .map(Long::parseLong)
                         .orElse(1L);
