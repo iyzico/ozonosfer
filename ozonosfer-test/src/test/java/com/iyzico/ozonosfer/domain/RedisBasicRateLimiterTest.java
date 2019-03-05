@@ -29,7 +29,7 @@ public class RedisBasicRateLimiterTest extends IntegrationTest {
     @Autowired
     RedisTemplate<String, String> redisTemplate;
 
-    private static final String OZONOSFER_WHITE_LIST = "ozonosfer-white-list";
+    private static final String OZON_ENABLED_LIST = "ozon-enabled-list";
 
     @Before
     public void setup() throws IOException, URISyntaxException {
@@ -47,7 +47,7 @@ public class RedisBasicRateLimiterTest extends IntegrationTest {
     public void should_return_one_when_first_call_of_rate_limiter_and_window_type_is_minute() {
         //given
         SampleRequest request = new SampleRequest();
-        redisTemplate.opsForSet().add(OZONOSFER_WHITE_LIST, "15");
+        redisTemplate.opsForSet().add(OZON_ENABLED_LIST, "15");
         request.setAuthenticationId("15");
         LocalTime now = LocalTime.now();
 
@@ -64,7 +64,7 @@ public class RedisBasicRateLimiterTest extends IntegrationTest {
     @Test
     public void should_return_five_when_fifth_call_of_rate_limiter_and_window_type_is_minute() {
         //given
-        redisTemplate.opsForSet().add(OZONOSFER_WHITE_LIST, "16");
+        redisTemplate.opsForSet().add(OZON_ENABLED_LIST, "16");
         SampleRequest request = new SampleRequest();
         request.setAuthenticationId("16");
         LocalTime now = LocalTime.now();
@@ -84,7 +84,7 @@ public class RedisBasicRateLimiterTest extends IntegrationTest {
     public void should_throw_exception_when_rate_limit_exceeded() {
         //given
         SampleRequest request = new SampleRequest();
-        redisTemplate.opsForSet().add(OZONOSFER_WHITE_LIST, "17");
+        redisTemplate.opsForSet().add(OZON_ENABLED_LIST, "17");
         request.setAuthenticationId("17");
         LocalTime now = LocalTime.now();
 

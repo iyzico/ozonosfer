@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import com.iyzico.ozonosfer.domain.exception.RateLimitedException;
 import com.iyzico.ozonosfer.domain.model.RateLimitRequest;
 import com.iyzico.ozonosfer.domain.model.RateLimitWindowSize;
+import com.iyzico.ozonosfer.domain.service.RateLimitTogglingService;
 import com.iyzico.ozonosfer.domain.service.RateLimiterService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
@@ -39,12 +40,12 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
     private static final double DELTA = 1.0;
 
     private RedisTemplate<String, String> redisTemplate;
-    private RedisWhiteListService redisWhiteListService;
+    private RateLimitTogglingService rateLimitTogglingService;
 
     public RedisBasicRateLimiterService(RedisTemplate<String, String> redisTemplate,
-                                        RedisWhiteListService redisWhiteListService) {
+                                        RedisRateLimitTogglingService redisRateLimitTogglingService) {
         this.redisTemplate = redisTemplate;
-        this.redisWhiteListService = redisWhiteListService;
+        this.rateLimitTogglingService = redisRateLimitTogglingService;
     }
 
     @Override
@@ -66,7 +67,7 @@ public class RedisBasicRateLimiterService implements RateLimiterService {
                     name = "coreSize",
                     value = "20")})
     public void rateLimit(RateLimitRequest request) {
-        if (redisWhiteListService.isNotLimited(String.valueOf(request.getKey()))) {
+        if (rateLimitTogglingService.isRateLimitEnabled(String.valueOf(request.getKey()))) {
             Long count = retrieveCount(request);
             if (rateLimitExceeded(request.getLimit(), count)) {
                 logger.warn("The rate limit has been exceeded for key: " + request.getKey());
