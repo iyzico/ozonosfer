@@ -2,6 +2,8 @@ package com.iyzico.ozonosfer.domain;
 
 import com.iyzico.ozonosfer.IntegrationTest;
 import com.iyzico.ozonosfer.domain.exception.RateLimitedException;
+import com.iyzico.ozonosfer.domain.request.SampleRequest;
+import com.iyzico.ozonosfer.domain.service.LimitedService;
 import com.netflix.hystrix.Hystrix;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
@@ -22,10 +24,12 @@ import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 public class RedisBasicRateLimiterTest extends IntegrationTest {
 
     @Autowired
-    MyLimitedService myLimitedService;
+    LimitedService myLimitedService;
 
     @Autowired
     RedisTemplate<String, String> redisTemplate;
+
+    private static final String OZON_LIST_KEY = "ozon-list";
 
     @Before
     public void setup() throws IOException, URISyntaxException {
@@ -43,6 +47,7 @@ public class RedisBasicRateLimiterTest extends IntegrationTest {
     public void should_return_one_when_first_call_of_rate_limiter_and_window_type_is_minute() {
         //given
         SampleRequest request = new SampleRequest();
+        redisTemplate.opsForSet().add(OZON_LIST_KEY, "15");
         request.setAuthenticationId("15");
         LocalTime now = LocalTime.now();
 
@@ -59,6 +64,7 @@ public class RedisBasicRateLimiterTest extends IntegrationTest {
     @Test
     public void should_return_five_when_fifth_call_of_rate_limiter_and_window_type_is_minute() {
         //given
+        redisTemplate.opsForSet().add(OZON_LIST_KEY, "16");
         SampleRequest request = new SampleRequest();
         request.setAuthenticationId("16");
         LocalTime now = LocalTime.now();
@@ -78,6 +84,7 @@ public class RedisBasicRateLimiterTest extends IntegrationTest {
     public void should_throw_exception_when_rate_limit_exceeded() {
         //given
         SampleRequest request = new SampleRequest();
+        redisTemplate.opsForSet().add(OZON_LIST_KEY, "17");
         request.setAuthenticationId("17");
         LocalTime now = LocalTime.now();
 

@@ -35,6 +35,12 @@
             <version>${spring-boot-starter-test.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.orange.redis-embedded</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>0.6</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
