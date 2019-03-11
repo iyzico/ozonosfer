@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ozonosfer-test</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
     <packaging>jar</packaging>
     <name>ozonosfer-test</name>
     <description>Functional Test Automation of ozonosfer Rate Limiter</description>
@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.iyzipay</groupId>
         <artifactId>ozonosfer</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.4</version>
     </parent>
 
     <dependencies>
