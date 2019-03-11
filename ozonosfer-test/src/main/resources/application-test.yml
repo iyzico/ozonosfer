@@ -1,13 +1,15 @@
 spring:
   application.name: ozonosfer-test
-  profiles.active: test
   redis:
     host: localhost
     port: 6381
     timeout: 1000
+    profiles:
+      active: test
 ozonosfer:
   implementation: redis
   seconds: 60
   limit: 1000
+  toggling: white-list
 redis:
   sentinel: false
