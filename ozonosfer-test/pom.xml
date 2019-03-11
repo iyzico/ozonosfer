@@ -18,14 +18,14 @@
     </properties>
 
     <parent>
-        <groupId>com.iyzico</groupId>
+        <groupId>com.iyzipay</groupId>
         <artifactId>ozonosfer</artifactId>
         <version>1.0.2</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>com.iyzico</groupId>
+            <groupId>com.iyzipay</groupId>
             <artifactId>ozonosfer-spring</artifactId>
             <version>${project.version}</version>
         </dependency>
