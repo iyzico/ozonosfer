@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ozonosfer-test</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
     <packaging>jar</packaging>
     <name>ozonosfer-test</name>
     <description>Functional Test Automation of ozonosfer Rate Limiter</description>
@@ -18,14 +18,14 @@
     </properties>
 
     <parent>
-        <groupId>com.iyzico</groupId>
+        <groupId>com.iyzipay</groupId>
         <artifactId>ozonosfer</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.4</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>com.iyzico</groupId>
+            <groupId>com.iyzipay</groupId>
             <artifactId>ozonosfer-spring</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -5,15 +5,15 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ozonosfer-spring</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
     <packaging>jar</packaging>
     <name>ozonosfer-spring</name>
     <description>Intelligent Rate Limiting Framework for Spring Applications</description>
 
     <parent>
-        <groupId>com.iyzico</groupId>
+        <groupId>com.iyzipay</groupId>
         <artifactId>ozonosfer</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.4</version>
     </parent>
 
     <properties>
