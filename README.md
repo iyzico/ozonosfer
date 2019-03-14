@@ -18,7 +18,7 @@ For ozonosfer-spring JDK 1.8 or newer is required.
     }
 ```
 
-#3. CONFIG
+# 3. CONFIG
 
 ```
 ozonosfer:
