@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.iyzipay</groupId>
     <artifactId>ozonosfer</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>pom</packaging>
     <name>ozonosfer</name>
     <description>Intelligent Scalable Rate Limiting</description>
