@@ -20,13 +20,13 @@ public class OzonosferConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(value = "ozonosfer.toggling", havingValue = "white-list")
+    @ConditionalOnProperty(value = "ozonosfer.toggling", havingValue = "white-list", matchIfMissing = true)
     public RateLimitTogglingService redisRateLimitWhiteListTogglingService() {
         return new RedisRateLimitWhiteListTogglingService(redisTemplate);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "ozonosfer", name = "toggling", havingValue = "black-list", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "ozonosfer", name = "toggling", havingValue = "black-list")
     public RateLimitTogglingService redisRateLimitBlackListTogglingService() {
         return new RedisRateLimitBlackListTogglingService(redisTemplate);
     }
